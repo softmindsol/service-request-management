@@ -32,11 +32,6 @@ const requests = [
   },
 ];
 
-const statusColor = {
-  Pending: "bg-red-200 text-red-800",
-  "In Progress": "bg-blue-200 text-blue-800",
-  Completed: "bg-green-200 text-green-800",
-};
 
 export default function AdminDashboard() {
   return (
