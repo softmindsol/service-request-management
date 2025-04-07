@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { FaCoffee, FaUtensils, FaBellSlash } from "react-icons/fa";
 
+
 const services = [
   { id: "drinks", label: "Drinks", icon: <FaCoffee size={40} /> },
   { id: "food", label: "Food", icon: <FaUtensils size={40} /> },
@@ -11,7 +12,7 @@ const services = [
 ];
 
 export default function ServiceRequest() {
-  const [selectedService, setSelectedService] = useState(null);
+  const [selectedService, setSelectedService] = useState<any>(null);
   const [notes, setNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const isOffline = false; // For demo; in real-world this would use network detection
@@ -39,11 +40,10 @@ export default function ServiceRequest() {
             <Card
               key={service.id}
               onClick={() => setSelectedService(service.id)}
-              className={`flex flex-col items-center justify-center p-6 cursor-pointer border-2 transition-colors duration-200 ${
-                selectedService === service.id
+              className={`flex flex-col items-center justify-center p-6 cursor-pointer border-2 transition-colors duration-200 ${selectedService === service.id
                   ? "border-black"
                   : "border-gray-200"
-              }`}>
+                }`}>
               {service.icon}
               <p className="mt-2 text-lg font-medium text-center">
                 {service.label}
