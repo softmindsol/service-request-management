@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
@@ -41,8 +41,8 @@ export default function ServiceRequest() {
               key={service.id}
               onClick={() => setSelectedService(service.id)}
               className={`flex flex-col items-center justify-center p-6 cursor-pointer border-2 transition-colors duration-200 ${selectedService === service.id
-                  ? "border-black"
-                  : "border-gray-200"
+                ? "border-black"
+                : "border-gray-200"
                 }`}>
               {service.icon}
               <p className="mt-2 text-lg font-medium text-center">
