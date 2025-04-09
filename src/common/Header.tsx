@@ -15,10 +15,10 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSettings, showSettings }) => {
   return (
-    <header className="sticky top-0 bg-inherit border-b z-10 p-1 flex justify-between items-center">
+    <header className="sticky top-0 bg-inherit border-b z-10  flex justify-between  items-center">
       <div className="flex items-center gap-2">
         <Link to='/'>
-          <img src={theme === "dark" ? "/logo-white.png" : "/logo.png"} alt="Logo" className="h-20 w-20" /></Link>
+          <img src={theme === "dark" ? "/logo-white.png" : "/logo.png"} alt="Logo" className="h-[60px] w-[60px]" /></Link>
         
         <h1 className="text-xl font-semibold">{serviceName}</h1>
       </div>
@@ -26,9 +26,9 @@ const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSe
         <Button variant="ghost" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
           {theme === "light" ? <FaMoon /> : <FaSun />}
         </Button>
-        <Button variant="ghost" onClick={() => setShowSettings(!showSettings)}>
-          <FaUserCog />
-        </Button>
+        <button onClick={() => setShowSettings(!showSettings)} className="cursor-pointer mr-2 hover:bg-gray-100 p-[8px] rounded-[8px] transition-all duration-100">
+          <FaUserCog size={20}/>
+        </button>
       </div>
     </header>
   );

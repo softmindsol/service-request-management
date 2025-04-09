@@ -78,7 +78,7 @@ export default function UserPage() {
               <Button
                 key={type.id}
                 variant={selectedRequest === type.id ? "default" : "outline"}
-                className={`w-full border ${selectedRequest !== type.id
+                className={`w-full border hover:cursor-pointer ${selectedRequest !== type.id
                   ? theme === 'dark'
                     ? 'border-white text-black hover:bg-white hover:text-black'
                     : 'border-black text-black hover:bg-black hover:text-white'
@@ -92,7 +92,7 @@ export default function UserPage() {
 
           <div className="flex-1 space-y-4">
             <Card>
-              <CardContent className="space-y-4 p-4 md:p-6">
+              <CardContent className="space-y-4 p-4 md:px-6 md:py-2">
                 <h2 className="text-xl font-semibold">Submit a Request</h2>
 
                 {selectedRequest && (
@@ -138,7 +138,7 @@ export default function UserPage() {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                 />
-                <Button onClick={submitRequest} disabled={Object.keys(cart).length === 0}> Submit Request </Button>
+                <Button className='cursor-pointer' onClick={submitRequest} disabled={Object.keys(cart).length === 0}> Submit Request </Button>
                 {submitted && <div className="text-green-500">Request submitted!</div>}
               </CardContent>
             </Card>
@@ -148,26 +148,52 @@ export default function UserPage() {
 
       {showSettings && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="p-6 w-full max-w-md bg-white text-black dark:bg-gray-800 dark:text-white">
-            <h2 className="text-xl font-semibold mb-4">User Settings</h2>
+          <Card className="relative p-6 w-full max-w-md bg-white text-black dark:bg-gray-800 dark:text-white">
+
+            {/* Proper styled Close (X) button */}
+            <button
+              onClick={() => setShowSettings(false)}
+              className="absolute top-4 right-4 text-black dark:text-white text-[24px] hover:scale-110 transition cursor-pointer"
+              aria-label="Close settings modal"
+            >
+              ×
+            </button>
+
+            <h2 className="text-xl font-semibold mb-4 mt-2">User Settings</h2>
+
             <div className="space-y-4">
               <div>
                 <label className="block mb-1 text-sm font-medium">Profile Image</label>
                 <input
                   type="file"
                   accept="image/*"
-                  className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-black file:text-white hover:file:bg-zinc-800 dark:file:bg-white dark:file:text-black dark:hover:file:bg-gray-300 transition-all"
+                  className="w-full text-sm text-gray-500
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-md file:border-0
+              file:text-sm file:font-semibold
+              file:bg-black file:text-white
+              hover:file:bg-zinc-800
+              dark:file:bg-white dark:file:text-black dark:hover:file:bg-gray-300
+              transition-all"
                 />
               </div>
+
               <div>
                 <label className="block mb-1">Name</label>
-                <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="w-full p-2 border rounded" />
+                <input
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
               </div>
+
               <div>
                 <label className="block mb-1">Password</label>
                 <input type="password" className="w-full p-2 border rounded" />
               </div>
-              <Button onClick={() => setShowSettings(false)}>Save & Close</Button>
+
+              <Button onClick={() => setShowSettings(false)}>Save</Button>
             </div>
           </Card>
         </div>
