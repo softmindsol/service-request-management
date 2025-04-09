@@ -35,13 +35,15 @@ export default function AdminPage() {
 
       <div className="max-w-5xl mx-auto space-y-6 p-4">
         {/* Toggle View Button */}
-        <div className="flex justify-end">
+        <div className="flex justify-end ">
           <Button
+            className="text-black dark:bg-black dark:text-white"
             variant="outline"
             onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
           >
             Switch to {viewMode === 'grid' ? 'List' : 'Grid'} View
           </Button>
+
         </div>
       
 
