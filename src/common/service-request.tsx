@@ -30,9 +30,34 @@ export default function UserPage() {
   const [userName, setUserName] = useState('John Smith');
   const [submitted, setSubmitted] = useState(false);
   const [serviceName] = useState("IntraServe Desk");
-
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedItemToOrder, setSelectedItemToOrder] = useState<string | null>(null);
   const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({});
   const [cart, setCart] = useState<{ [key: string]: { name: string; quantity: number } }>({});
+
+
+  const submitRequest = () => {
+    if (Object.keys(cart).length === 0) return;
+    setShowConfirmModal(true); // open the modal instead of window.confirm
+  };
+
+  const confirmSendOrder = () => {
+    const selectedItems = Object.entries(cart)
+      .map(([item, { quantity }]) => `${quantity} x ${item}`)
+      .join(', ');
+
+    console.log("Submitted Order:", selectedItems, "Notes:", notes); // API call here
+    setSubmitted(true);
+    setShowConfirmModal(false);
+
+    setTimeout(() => {
+      setSubmitted(false);
+      setSelectedRequest('');
+      setItemQuantities({});
+      setCart({});
+      setNotes('');
+    }, 3000);
+  };
 
   const handleQuantityChange = (item: string, quantity: number) => {
     setItemQuantities(prev => ({
@@ -50,27 +75,27 @@ export default function UserPage() {
     }
   };
 
-  const submitRequest = () => {
-    const selectedItems = Object.entries(cart)
-      .map(([item, { quantity }]) => `${quantity} x ${item}`)
-      .join(', ');
+  // const submitRequest = () => {
+  //   const selectedItems = Object.entries(cart)
+  //     .map(([item, { quantity }]) => `${quantity} x ${item}`)
+  //     .join(', ');
 
-    if (!selectedItems) return; // If the cart is empty, we don't proceed
+  //   if (!selectedItems) return; // If the cart is empty, we don't proceed
 
-    const confirmMore = window.confirm("Would you like to add more items or send the order?");
-    if (!confirmMore) {
-      // Instead of alert, we show the submitted items for now
-      console.log("Submitted Order:", selectedItems, "Notes:", notes); // Replace with API call
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        setSelectedRequest('');
-        setItemQuantities({});
-        setCart({});
-        setNotes('');
-      }, 3000);
-    }
-  };
+  //   const confirmMore = window.confirm("Would you like to add more items or send the order?");
+  //   if (!confirmMore) {
+  //     // Instead of alert, we show the submitted items for now
+  //     console.log("Submitted Order:", selectedItems, "Notes:", notes); // Replace with API call
+  //     setSubmitted(true);
+  //     setTimeout(() => {
+  //       setSubmitted(false);
+  //       setSelectedRequest('');
+  //       setItemQuantities({});
+  //       setCart({});
+  //       setNotes('');
+  //     }, 3000);
+  //   }
+  // };
 
   return (
     <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
@@ -116,27 +141,23 @@ export default function UserPage() {
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">Select Items & Quantity</h3>
                     <div className="space-y-2">
-                      {requestTypes.find(r => r.id === selectedRequest)?.items.map(item => (
-                        <div key={item} className="flex items-center justify-between gap-4 py-1">
-                          <span className="w-1/3">{item}</span>
+                      {requestTypes.find(r => r.id === selectedRequest)?.items.map(item => {
+                        const quantity = itemQuantities[item] || 1;
 
-                          <input
-                            type="number"
-                            min={0}
-                            value={itemQuantities[item] || 0}
-                            onChange={(e) => handleQuantityChange(item, Number(e.target.value))}
-                            className="w-20 p-2 border rounded text-black"
-                          />
+                        return (
+                          <Card key={item} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="text-lg font-medium">{item}</div>
 
-                          <Button
-                            className="ml-4"
-                            onClick={() => handleAddToCart(item, itemQuantities[item] || 0)}
-                            disabled={itemQuantities[item] === 0}
-                          >
-                            Add to Cart
-                          </Button>
-                        </div>
-                      ))}
+                            <div className="flex items-center gap-3">
+                              <Button variant="outline" onClick={() => handleQuantityChange(item, Math.max(1, quantity - 1))}>–</Button>
+                              <span className="min-w-[24px] text-center">{quantity}</span>
+                              <Button variant="outline" onClick={() => handleQuantityChange(item, quantity + 1)}>+</Button>
+                            </div>
+
+                            <Button onClick={() => setSelectedItemToOrder(item)}>Order</Button>
+                          </Card>
+                        );
+                      })}
 
                     </div>
                   </div>
@@ -172,14 +193,26 @@ export default function UserPage() {
 
       {/* Settings Modal */}
       {showSettings && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed  inset-0 bg-black/50 flex items-center justify-center z-50">
           <Card className="p-6 w-full max-w-md bg-white text-black dark:bg-gray-800 dark:text-white">
             <h2 className="text-xl font-semibold mb-4">User Settings</h2>
             <div className="space-y-4">
               <div>
-                <label className="block mb-1">Profile Image</label>
-                <input type="file" accept="image/*" className="w-full" />
+                <label className="block mb-1 text-sm font-medium">Profile Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="w-full text-sm text-gray-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-md file:border-0
+      file:text-sm file:font-semibold
+      file:bg-black file:text-white
+      hover:file:bg-zinc-800
+      dark:file:bg-white dark:file:text-black dark:hover:file:bg-gray-300
+      transition-all"
+                />
               </div>
+
               <div>
                 <label className="block mb-1">Name</label>
                 <input
@@ -198,6 +231,72 @@ export default function UserPage() {
           </Card>
         </div>
       )}
+
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <Card className="w-full max-w-md bg-white text-black dark:bg-zinc-900 dark:text-white rounded-xl shadow-lg">
+            <CardContent className="p-6 space-y-6">
+              <h2 className="text-xl font-semibold">Confirm Your Order</h2>
+              <p>Would you like to send the order now or add more items?</p>
+              <div className="flex justify-end gap-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowConfirmModal(false)}
+                  className="dark:border-white cursor-pointer"
+                >
+                  Add More Items
+                </Button>
+                <Button
+                  className="bg-black text-white cursor-pointer dark:bg-white dark:text-black"
+                  onClick={confirmSendOrder}
+                >
+                  Send Order
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )
+      }
+      {selectedItemToOrder && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <Card className="w-full max-w-md bg-white text-black dark:bg-zinc-900 dark:text-white rounded-xl shadow-lg">
+            <CardContent className="p-6 space-y-6">
+              <h2 className="text-xl font-semibold">Add {selectedItemToOrder} to Cart?</h2>
+              <p>You selected <strong>{itemQuantities[selectedItemToOrder] || 1}</strong> x {selectedItemToOrder}</p>
+              <div className="flex justify-end gap-4">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    handleAddToCart(
+                      selectedItemToOrder,
+                      itemQuantities[selectedItemToOrder] || 1
+                    );
+                    setSelectedItemToOrder(null);
+                  }}
+                >
+                  Add More Items
+                </Button>
+                <Button
+                  className="bg-black text-white dark:bg-white dark:text-black"
+                  onClick={() => {
+                    handleAddToCart(
+                      selectedItemToOrder,
+                      itemQuantities[selectedItemToOrder] || 1
+                    );
+                    setSelectedItemToOrder(null);
+                    setShowConfirmModal(true); // trigger final confirmation
+                  }}
+                >
+                  Order Now
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+
     </div>
   );
 }
