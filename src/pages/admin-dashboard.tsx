@@ -4,7 +4,7 @@ import { RootState } from '@/store';
 import { updateOrderStatus } from '@/store/slices/orderSlice';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Header from "./Header";
+import Header from "@/common/Header";
 import { addCategory, addItemToCategory, removeItemFromCategory } from "@/store/slices/categorySlice";
 
 export default function AdminPage() {
