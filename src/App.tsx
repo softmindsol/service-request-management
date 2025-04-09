@@ -6,6 +6,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<ServiceRequest />} />
+    
       <Route path="/admin" element={<AdminDashboard />} />
     </Routes>
   );

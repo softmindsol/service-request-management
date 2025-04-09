@@ -1,123 +1,30 @@
-// import { Button } from "@/components/ui/button";
-// import { Card } from "@/components/ui/card";
-// import { ScrollArea } from "@/components/ui/scroll-area";
-// import { Input } from "@/components/ui/input";
-// import {
-//   Select,
-//   SelectTrigger,
-//   SelectValue,
-//   SelectContent,
-//   SelectItem,
-// } from "@/components/ui/select";
-// import { Badge } from "@/components/ui/badge";
-// import { LogOut } from "lucide-react";
-// import { Sidebar } from "./Sidebar";
-
-// const requests = [
-//   {
-//     id: 1,
-//     service: "Drinks",
-//     status: "Pending",
-//     department: "Kitchen",
-//     timestamp: "10:35 AM",
-//     notes: "Need cold coffee",
-//   },
-//   {
-//     id: 2,
-//     service: "Reception Call",
-//     status: "In Progress",
-//     department: "Reception",
-//     timestamp: "11:10 AM",
-//     notes: "",
-//   },
-// ];
-
-
-// export default function AdminDashboard() {
-//   return (
-//     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
-//       {/* Sidebar */}
-//       <Sidebar />
-
-//       {/* Main content */}
-//       <div className="flex-1 p-4 md:p-6 space-y-4">
-//         {/* Header */}
-//         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
-//           <h1 className="text-2xl font-bold">Admin Panel</h1>
-//           <div className="flex items-center gap-4">
-//             <span className="text-gray-600">Admin User</span>
-//             <Button variant="outline" size="sm">
-//               <LogOut className="w-4 h-4 mr-1" /> Logout
-//             </Button>
-//           </div>
-//         </div>
-
-//         {/* Filter section */}
-//         <div className="flex flex-wrap gap-4 items-center">
-//           <Input placeholder="Search notes..." className="w-full sm:w-60" />
-//           <Select>
-//             <SelectTrigger className="w-full sm:w-48">
-//               <SelectValue placeholder="Filter by Status" />
-//             </SelectTrigger>
-//             <SelectContent>
-//               <SelectItem value="All">All</SelectItem>
-//               <SelectItem value="Pending">Pending</SelectItem>
-//               <SelectItem value="In Progress">In Progress</SelectItem>
-//               <SelectItem value="Completed">Completed</SelectItem>
-//             </SelectContent>
-//           </Select>
-//         </div>
-
-//         {/* Request List */}
-//         <ScrollArea className="h-[60vh] pr-2">
-//           <div className="grid gap-4">
-//             {requests.map((req) => (
-//               <Card
-//                 key={req.id}
-//                 className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-//                 <div>
-//                   <div className="font-semibold">{req.service}</div>
-//                   <div className="text-sm text-gray-500">
-//                     {req.timestamp} • {req.department}
-//                   </div>
-//                   {req.notes && <div className="mt-1 text-sm">{req.notes}</div>}
-//                 </div>
-//                 <div className="flex flex-col sm:items-end gap-2 mt-4 sm:mt-0">
-//                   <Badge
-//                     className={`$ {
-//                       statusColor[req.status]
-//                     } rounded-full px-3 py-1 text-xs`}>
-//                     {req.status}
-//                   </Badge>
-//                   <Button variant="outline" size="sm">
-//                     Change Status
-//                   </Button>
-//                 </div>
-//               </Card>
-//             ))}
-//           </div>
-//         </ScrollArea>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-// components/AdminPage.tsx
 import { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/store';
+import { updateOrderStatus } from '@/store/slices/orderSlice';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Header from "./Header";
+import { addCategory, addItemToCategory, removeItemFromCategory } from "@/store/slices/categorySlice";
 
 export default function AdminPage() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [showSettings, setShowSettings] = useState(false);
   const [serviceName] = useState("IntraServe Admin Panel");
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
+  const categories = useSelector((state: RootState) =>
+    (state.categories as RootState['categories']).categories
+  );
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+
+
+  const orders = useSelector((state: RootState) =>
+    (state.orders as RootState['orders']).orders
+  );
+  const dispatch = useDispatch();
 
   return (
     <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50 text-black"}`}>
-
-      {/* Header with theme and settings */}
       <Header
         theme={theme}
         serviceName={serviceName}
@@ -127,49 +34,176 @@ export default function AdminPage() {
       />
 
       <div className="max-w-5xl mx-auto space-y-6 p-4">
+        {/* Toggle View Button */}
+        <div className="flex justify-end">
+          <Button
+            variant="outline"
+            onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+          >
+            Switch to {viewMode === 'grid' ? 'List' : 'Grid'} View
+          </Button>
+        </div>
+      
+
+
         {/* Department Requests */}
         <Card>
           <CardContent className="p-4 md:p-6">
             <h2 className="text-xl font-semibold mb-4">Department Requests</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="bg-gray-200 dark:bg-gray-700">
-                    <th className="p-2">Type</th>
-                    <th className="p-2">Timestamp</th>
-                    <th className="p-2">Status</th>
-                    <th className="p-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b">
-                    <td className="p-2">Food</td>
-                    <td className="p-2">10:24 AM</td>
-                    <td className="p-2">Pending</td>
-                    <td className="p-2 space-x-2">
-                      <Button size="sm">Accept</Button>
-                      <Button size="sm" variant="outline">Answered</Button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
 
-        {/* Admin Controls */}
-        <Card>
-          <CardContent className="p-4 md:p-6">
-            <h2 className="text-xl font-semibold mb-4">Admin Controls</h2>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Manage service categories</li>
-              <li>Assign departments</li>
-              <li>View reports/logs</li>
-            </ul>
+            {viewMode === 'list' ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="bg-gray-200 dark:bg-gray-700">
+                      <th className="p-2">Type & Items</th>
+                      <th className="p-2">Requested By</th>
+                      <th className="p-2">Timestamp</th>
+                      <th className="p-2">Status</th>
+                      <th className="p-2">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((req) => (
+                      <tr key={req.id} className="border-b align-top">
+                        <td className="p-2">
+                          <div className="font-semibold italic inline-block mr-2">{req.type}</div>
+                          <span className="text-sm italic">{req.items.map(item => `${item.quantity} × ${item.name}`).join(', ')}</span>
+                        </td>
+                        <td className="p-2">{req.person}</td>
+                        <td className="p-2">{req.timestamp}</td>
+                        <td className="p-2">{req.status}</td>
+                        <td className="p-2 space-x-2">
+                          <Button size="sm" onClick={() => dispatch(updateOrderStatus({ id: req.id, status: 'In Progress' }))}>Accept</Button>
+                          <Button size="sm" variant="outline" onClick={() => dispatch(updateOrderStatus({ id: req.id, status: 'Answered' }))}>Answered</Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                {
+                    orders.length === 0 ? (
+                      <div className="col-span-1 md:col-span-2 text-center text-gray-500">
+                        No requests available.
+                      </div>
+                    ) : 
+                orders.map((req) => (
+                  <Card key={req.id} className="border">
+                    <CardContent className="p-4 space-y-2">
+                      <div>
+                        <strong>Type:</strong>{' '}
+                        <span className="italic text-sm">
+                          ({req.type}: {req.items.map(item => `${item.quantity} × ${item.name}`).join(', ')})
+                        </span>
+                      </div>
+                      <div><strong>Requested By:</strong> {req.person}</div>
+                      <div><strong>Time:</strong> {req.timestamp}</div>
+                      <div><strong>Status:</strong> {req.status}</div>
+
+                      <div className="space-x-2 pt-2">
+                        <Button size="sm" onClick={() => dispatch(updateOrderStatus({ id: req.id, status: 'In Progress' }))}>Accept</Button>
+                        <Button size="sm" variant="outline" onClick={() => dispatch(updateOrderStatus({ id: req.id, status: 'Answered' }))}>Answered</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
+        {/* Manage Categories */}
+        <Card>
+          <CardContent className="p-4 md:p-6 space-y-6">
+            <h2 className="text-xl font-semibold mb-4">Manage Categories</h2>
+            <div className="pt-6 border-t flex items-center justify-between">
+              <h3 className="text-lg font-semibold mb-2">Add New Category</h3>
+              <Button onClick={() => setShowCategoryModal(true)}>Add Category</Button>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2">
+              {categories.map((cat) => (
+                <div key={cat.id} className="rounded-lg border p-4 bg-white dark:bg-zinc-800 shadow-sm space-y-3">
+                  <h3 className="text-lg font-semibold">{cat.label}</h3>
+
+                  <ul className="space-y-2">
+                    {cat.items.map(item => (
+                      <li key={item.name} className="flex justify-between items-center text-sm border-b pb-1">
+                        <span>{item.name}</span>
+                        <Button size="sm" variant="ghost" onClick={() => dispatch(removeItemFromCategory({ categoryId: cat.id, itemName: item.name }))}>
+                          Remove
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const input = (e.target as any).elements.itemName;
+                      if (input.value.trim()) {
+                        dispatch(addItemToCategory({ categoryId: cat.id, itemName: input.value }));
+                        input.value = "";
+                      }
+                    }}
+                    className="flex items-center gap-2 pt-2"
+                  >
+                    <input
+                      name="itemName"
+                      placeholder="New item"
+                      className="flex-1 px-3 py-1.5 border rounded text-sm dark:bg-zinc-900"
+                    />
+                    <Button size="sm" type="submit">Add</Button>
+                  </form>
+                </div>
+              ))}
+            </div>
+
+           
+          </CardContent>
+        </Card>
+      
+        {showCategoryModal && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+    <Card className="w-full max-w-md bg-white dark:bg-zinc-900 text-black dark:text-white rounded-lg shadow-lg">
+      <CardContent className="p-6 space-y-4">
+        <h3 className="text-lg font-semibold">Add New Category</h3>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const form = e.target as any;
+            dispatch(addCategory({ id: form.catId.value, label: form.catLabel.value }));
+            form.reset();
+            setShowCategoryModal(false);
+          }}
+          className="space-y-4"
+        >
+          <input
+            name="catId"
+            placeholder="Category ID"
+            className="w-full px-3 py-2 border rounded text-sm dark:bg-zinc-800"
+            required
+          />
+          <input
+            name="catLabel"
+            placeholder="Category Label"
+            className="w-full px-3 py-2 border rounded text-sm dark:bg-zinc-800"
+            required
+          />
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setShowCategoryModal(false)} type="button">Cancel</Button>
+            <Button type="submit">Add</Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  </div>
+)}
+
       </div>
     </div>
   );
 }
-
