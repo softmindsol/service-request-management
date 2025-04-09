@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSe
         <h1 className="text-xl font-semibold">{serviceName}</h1>
       </div>
       <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+        <Button className='cursor-pointer' variant="ghost" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
           {theme === "light" ? <FaMoon /> : <FaSun />}
         </Button>
         <button onClick={() => setShowSettings(!showSettings)} className="cursor-pointer mr-2 hover:bg-gray-100 p-[8px] rounded-[8px] transition-all duration-100">

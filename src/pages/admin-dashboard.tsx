@@ -37,7 +37,7 @@ export default function AdminPage() {
         {/* Toggle View Button */}
         <div className="flex justify-end ">
           <Button
-            className="text-black dark:bg-black dark:text-white"
+            className="text-black dark:bg-black dark:text-white cursor-pointer"
             variant="outline"
             onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
           >
@@ -107,8 +107,8 @@ export default function AdminPage() {
                       <div><strong>Status:</strong> {req.status}</div>
 
                       <div className="space-x-2 pt-2">
-                        <Button size="sm" onClick={() => dispatch(updateOrderStatus({ id: req.id, status: 'In Progress' }))}>Accept</Button>
-                        <Button size="sm" variant="outline" onClick={() => dispatch(updateOrderStatus({ id: req.id, status: 'Answered' }))}>Answered</Button>
+                        <Button className='cursor-pointer' size="sm" onClick={() => dispatch(updateOrderStatus({ id: req.id, status: 'In Progress' }))}>Accept</Button>
+                        <Button className='cursor-pointer' size="sm" variant="outline" onClick={() => dispatch(updateOrderStatus({ id: req.id, status: 'Answered' }))}>Answered</Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -123,7 +123,7 @@ export default function AdminPage() {
             <h2 className="text-xl font-semibold mb-4">Manage Categories</h2>
             <div className="pt-6 border-t flex items-center justify-between">
               <h3 className="text-lg font-semibold mb-2">Add New Category</h3>
-              <Button onClick={() => setShowCategoryModal(true)}>Add Category</Button>
+              <Button className='cursor-pointer' onClick={() => setShowCategoryModal(true)}>Add Category</Button>
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2">
@@ -135,7 +135,7 @@ export default function AdminPage() {
                     {cat.items.map(item => (
                       <li key={item.name} className="flex justify-between items-center text-sm border-b pb-1">
                         <span>{item.name}</span>
-                        <Button size="sm" variant="ghost" onClick={() => dispatch(removeItemFromCategory({ categoryId: cat.id, itemName: item.name }))}>
+                        <Button className='cursor-pointer'  size="sm" variant="ghost" onClick={() => dispatch(removeItemFromCategory({ categoryId: cat.id, itemName: item.name }))}>
                           Remove
                         </Button>
                       </li>
@@ -158,7 +158,7 @@ export default function AdminPage() {
                       placeholder="New item"
                       className="flex-1 px-3 py-1.5 border rounded text-sm dark:bg-zinc-900"
                     />
-                    <Button size="sm" type="submit">Add</Button>
+                    <Button className='cursor-pointer' size="sm" type="submit">Add</Button>
                   </form>
                 </div>
               ))}
@@ -196,8 +196,8 @@ export default function AdminPage() {
             required
           />
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setShowCategoryModal(false)} type="button">Cancel</Button>
-            <Button type="submit">Add</Button>
+                    <Button className='cursor-pointer' variant="outline" onClick={() => setShowCategoryModal(false)} type="button">Cancel</Button>
+                    <Button className='cursor-pointer' type="submit">Add</Button>
           </div>
         </form>
       </CardContent>

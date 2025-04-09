@@ -106,12 +106,12 @@ export default function UserPage() {
                             <div className="text-lg font-medium w-[15%]">{item.name}</div>
 
                             <div className="flex items-center gap-3">
-                              <Button variant="outline" onClick={() => handleQuantityChange(item.name, Math.max(1, quantity - 1))}>–</Button>
+                              <Button className='cursor-pointer' variant="outline" onClick={() => handleQuantityChange(item.name, Math.max(1, quantity - 1))}>–</Button>
                               <span className="min-w-[24px] text-center">{quantity}</span>
-                              <Button variant="outline" onClick={() => handleQuantityChange(item.name, quantity + 1)}>+</Button>
+                              <Button className='cursor-pointer' variant="outline" onClick={() => handleQuantityChange(item.name, quantity + 1)}>+</Button>
                             </div>
 
-                            <Button onClick={() => setSelectedItemToOrder(item.name)}>Order</Button>
+                            <Button className='cursor-pointer' onClick={() => setSelectedItemToOrder(item.name)}>Order</Button>
                           </Card>
                         );
                       })}
@@ -193,7 +193,7 @@ export default function UserPage() {
                 <input type="password" className="w-full p-2 border rounded" />
               </div>
 
-              <Button onClick={() => setShowSettings(false)}>Save</Button>
+              <Button className='cursor-pointer' onClick={() => setShowSettings(false)}>Save</Button>
             </div>
           </Card>
         </div>
