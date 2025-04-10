@@ -13,6 +13,8 @@ export type Order = {
   items: OrderItem[];
   timestamp: string;
   status: "Pending" | "In Progress" | "Answered";
+    answeredAt?: string; // ← time when answered
+
 };
 
 interface OrderState {
@@ -39,10 +41,16 @@ const orderSlice = createSlice({
     },
     updateOrderStatus: (
       state,
-      action: PayloadAction<{ id: string; status: Order["status"] }>
+      action: PayloadAction<{ id: string;status: "Pending" | "In Progress" | "Answered" }>
     ) => {
       const order = state.orders.find((o) => o.id === action.payload.id);
-      if (order) order.status = action.payload.status;
+      if (order) {
+        order.status = action.payload.status;
+
+        if (action.payload.status === "Answered") {
+          order.timestamp = new Date().toLocaleTimeString(); // ✅ Timestamp update here
+        }
+      }
     },
   },
 });

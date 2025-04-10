@@ -95,7 +95,9 @@ export default function AdminPage() {
               </table>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {pendingOrders.map(req => (
+                
+                {
+                    pendingOrders.length === 0 ? (<div className="text-gray-500">No requests in pending.</div>): (pendingOrders.map(req => (
                   <Card key={req.id}>
                     <CardContent className="space-y-2 p-4">
                       <div><strong>Type:</strong> {req.type}</div>
@@ -109,7 +111,7 @@ export default function AdminPage() {
                       </div>
                     </CardContent>
                   </Card>
-                ))}
+                )))}
               </div>
             )}
           </CardContent>
