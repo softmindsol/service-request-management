@@ -9,7 +9,7 @@ function App() {
     <Routes>
       <Route path="/" element={<ServiceRequest />} />
       <Route path="/auth-form" element={<AuthForm />} />
-      <Route path="/admin-panel" element={<AdminDashboard />} />
+      <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/answered-order" element={<AnsweredOrdersPage />} />
 
     </Routes>
