@@ -1,3 +1,5 @@
+// ✅ Final Updated Code
+
 import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,7 +18,6 @@ export default function UserPage() {
   const [submitted, setSubmitted] = useState(false);
   const [serviceName] = useState("IntraServe Desk");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectedItemToOrder, setSelectedItemToOrder] = useState<string | null>(null);
   const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({});
   const [cart, setCart] = useState<{ [key: string]: { name: string; quantity: number } }>({});
   const dispatch = useDispatch();
@@ -29,15 +30,12 @@ export default function UserPage() {
 
   const confirmSendOrder = () => {
     const orderItems = Object.entries(cart).map(([name, { quantity }]) => ({ name, quantity }));
-
-    dispatch(
-      addOrder({
-        type: selectedRequest,
-        person: userName,
-        items: orderItems,
-        status: 'Pending',
-      })
-    );
+    dispatch(addOrder({
+      type: selectedRequest,
+      person: userName,
+      items: orderItems,
+      status: 'Pending',
+    }));
 
     setSubmitted(true);
     setShowConfirmModal(false);
@@ -91,11 +89,20 @@ export default function UserPage() {
           </div>
 
           <div className="flex-1 space-y-4">
-            <Card>
-              <CardContent className="space-y-4 p-4 md:px-6 md:py-2">
-                <h2 className="text-xl font-semibold">Submit a Request</h2>
+            {!selectedRequest && (
+              <Card className="text-center p-6 text-gray-500 dark:text-gray-400">
+                <CardContent>
+                  <h2 className="text-2xl font-semibold mb-2">Welcome to IntraServe Desk</h2>
+                  <p className="text-sm">Please select a category to begin your request.</p>
+                </CardContent>
+              </Card>
+            )}
 
-                {selectedRequest && (
+            {selectedRequest && (
+              <Card>
+                <CardContent className="space-y-4 p-4 md:px-6 md:py-2">
+                  <h2 className="text-xl font-semibold">Submit a Request</h2>
+
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">Select Items & Quantity</h3>
                     <div className="space-y-2">
@@ -104,44 +111,45 @@ export default function UserPage() {
                         return (
                           <Card key={item.name} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div className="text-lg font-medium w-[15%]">{item.name}</div>
-
                             <div className="flex items-center gap-3">
-                              <Button className='cursor-pointer' variant="outline" onClick={() => handleQuantityChange(item.name, Math.max(1, quantity - 1))}>–</Button>
+                              <Button variant="outline" onClick={() => handleQuantityChange(item.name, Math.max(1, quantity - 1))}>–</Button>
                               <span className="min-w-[24px] text-center">{quantity}</span>
-                              <Button className='cursor-pointer' variant="outline" onClick={() => handleQuantityChange(item.name, quantity + 1)}>+</Button>
+                              <Button variant="outline" onClick={() => handleQuantityChange(item.name, quantity + 1)}>+</Button>
                             </div>
-
-                            <Button className='cursor-pointer' onClick={() => setSelectedItemToOrder(item.name)}>Order</Button>
+                            <Button onClick={() => handleAddToCart(item.name, quantity)}>Add to Cart</Button>
                           </Card>
                         );
                       })}
                     </div>
                   </div>
-                )}
 
-                {Object.keys(cart).length > 0 && (
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Your Cart</h3>
-                    <div className="space-y-2">
-                      {Object.entries(cart).map(([key, { name, quantity }]) => (
-                        <div key={key} className="flex justify-between">
-                          <span>{name}</span>
-                          <span>{quantity} x</span>
+                  <Textarea
+                    placeholder="Optional notes..."
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                  />
+
+                  {Object.keys(cart).length > 0 && (
+                    <>
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-medium">Your Cart</h3>
+                        <div className="space-y-2">
+                          {Object.entries(cart).map(([key, { name, quantity }]) => (
+                            <div key={key} className="flex justify-between">
+                              <span>{name}</span>
+                              <span>{quantity} x</span>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                      </div>
+                      <Button onClick={submitRequest}>Submit Request</Button>
+                    </>
+                  )}
 
-                <Textarea
-                  placeholder="Optional notes..."
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                />
-                <Button className='cursor-pointer' onClick={submitRequest} disabled={Object.keys(cart).length === 0}> Submit Request </Button>
-                {submitted && <div className="text-green-500">Request submitted!</div>}
-              </CardContent>
-            </Card>
+                  {submitted && <div className="text-green-500">Request submitted!</div>}
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>
@@ -149,56 +157,24 @@ export default function UserPage() {
       {showSettings && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <Card className="relative p-6 w-full max-w-md bg-white text-black dark:bg-gray-800 dark:text-white">
-
-            {/* Proper styled Close (X) button */}
             <button
               onClick={() => setShowSettings(false)}
               className="absolute top-4 right-4 text-black dark:text-white text-[24px] hover:scale-110 transition cursor-pointer"
-              aria-label="Close settings modal"
             >
               ×
             </button>
-
             <h2 className="text-xl font-semibold mb-4 mt-2">User Settings</h2>
-
             <div className="space-y-4">
-              <div>
-                <label className="block mb-1 text-sm font-medium">Profile Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="w-full text-sm text-gray-500
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-md file:border-0
-              file:text-sm file:font-semibold
-              file:bg-black file:text-white
-              hover:file:bg-zinc-800
-              dark:file:bg-white dark:file:text-black dark:hover:file:bg-gray-300
-              transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block mb-1">Name</label>
-                <input
-                  type="text"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  className="w-full p-2 border rounded"
-                />
-              </div>
-
-              <div>
-                <label className="block mb-1">Password</label>
-                <input type="password" className="w-full p-2 border rounded" />
-              </div>
-
-              <Button className='cursor-pointer' onClick={() => setShowSettings(false)}>Save</Button>
+              <input type="file" accept="image/*" className="w-full text-sm" />
+              <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="w-full p-2 border rounded" />
+              <input type="password" className="w-full p-2 border rounded" placeholder="Password" />
+              <Button onClick={() => setShowSettings(false)}>Save</Button>
             </div>
           </Card>
         </div>
       )}
 
+      {/* ✅ Single confirmation modal retained */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <Card className="w-full max-w-md bg-white text-black dark:bg-zinc-900 dark:text-white rounded-xl shadow-lg">
@@ -206,40 +182,8 @@ export default function UserPage() {
               <h2 className="text-xl font-semibold">Confirm Your Order</h2>
               <p>Would you like to send the order now or add more items?</p>
               <div className="flex justify-end gap-4">
-                <Button variant="outline" onClick={() => setShowConfirmModal(false)} className="dark:border-white cursor-pointer">Add More Items</Button>
-                <Button className="bg-black text-white cursor-pointer dark:bg-white dark:text-black" onClick={confirmSendOrder}>Send Order</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {selectedItemToOrder && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <Card className="w-full max-w-md bg-white text-black dark:bg-zinc-900 dark:text-white rounded-xl shadow-lg">
-            <CardContent className="p-6 space-y-6">
-              <h2 className="text-xl font-semibold">Add {selectedItemToOrder} to Cart?</h2>
-              <p>You selected <strong>{itemQuantities[selectedItemToOrder] || 1}</strong> x {selectedItemToOrder}</p>
-              <div className="flex justify-end gap-4">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    handleAddToCart(selectedItemToOrder, itemQuantities[selectedItemToOrder] || 1);
-                    setSelectedItemToOrder(null);
-                  }}
-                >
-                  Add More Items
-                </Button>
-                <Button
-                  className="bg-black text-white dark:bg-white dark:text-black"
-                  onClick={() => {
-                    handleAddToCart(selectedItemToOrder, itemQuantities[selectedItemToOrder] || 1);
-                    setSelectedItemToOrder(null);
-                    setShowConfirmModal(true);
-                  }}
-                >
-                  Order Now
-                </Button>
+                <Button variant="outline" onClick={() => setShowConfirmModal(false)}>Add More Items</Button>
+                <Button className="bg-black text-white dark:bg-white dark:text-black" onClick={confirmSendOrder}>Send Order</Button>
               </div>
             </CardContent>
           </Card>
