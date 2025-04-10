@@ -48,7 +48,7 @@ export default function UserPage() {
       setItemQuantities({});
       setCart({});
       setNotes('');
-    }, 3000);
+    }, 500);
   };
 
   const handleQuantityChange = (item: string, quantity: number) => {
