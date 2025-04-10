@@ -46,7 +46,7 @@ export default function UserPage() {
       setItemQuantities({});
       setCart({});
       setNotes('');
-    }, 500);
+    }, 200);
   };
 
   const handleQuantityChange = (item: string, quantity: number) => {
@@ -178,7 +178,7 @@ export default function UserPage() {
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <Card className="w-full max-w-md bg-white text-black dark:bg-zinc-900 dark:text-white rounded-xl shadow-lg">
-            <CardContent className="p-6 space-y-6">
+            <CardContent className=" space-y-6">
               <h2 className="text-xl font-semibold">Confirm Your Order</h2>
               <p>Would you like to send the order now or add more items?</p>
               <div className="flex justify-end gap-4">

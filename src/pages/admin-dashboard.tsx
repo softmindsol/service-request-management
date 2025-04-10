@@ -24,6 +24,7 @@ export default function AdminPage() {
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
   const [editedLabel, setEditedLabel] = useState("");
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [newItems, setNewItems] = useState<Record<string, string>>({});
 
   const categories = useSelector((state: RootState) => state.categories.categories);
   const orders = useSelector((state: RootState) => state.orders.orders);
@@ -240,21 +241,32 @@ export default function AdminPage() {
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
-                      const input = (e.target as any).elements.itemName;
-                      if (input.value.trim()) {
-                        dispatch(addItemToCategory({ categoryId: cat.id, itemName: input.value }));
-                        input.value = "";
+                      const itemName = newItems[cat.id]?.trim();
+                      if (itemName) {
+                        dispatch(addItemToCategory({ categoryId: cat.id, itemName }));
+                        setNewItems(prev => ({ ...prev, [cat.id]: "" }));
                       }
                     }}
                     className="flex items-center gap-2 pt-2"
                   >
                     <input
                       name="itemName"
+                      value={newItems[cat.id] || ""}
+                      onChange={(e) =>
+                        setNewItems(prev => ({ ...prev, [cat.id]: e.target.value }))
+                      }
                       placeholder="New item"
                       className="flex-1 px-3 py-1.5 border rounded text-sm dark:bg-zinc-900"
                     />
-                    <Button size="sm" type="submit">Add</Button>
+                    <Button
+                      size="sm"
+                      type="submit"
+                      disabled={!newItems[cat.id]?.trim()}
+                    >
+                      Add
+                    </Button>
                   </form>
+
                 </div>
               ))}
             </div>
