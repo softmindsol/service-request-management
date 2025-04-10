@@ -64,9 +64,31 @@ const categorySlice = createSlice({
         );
       }
     },
+    updateCategory: (
+      state,
+      action: PayloadAction<{ id: string; newLabel: string }>
+    ) => {
+      const category = state.categories.find(
+        (cat) => cat.id === action.payload.id
+      );
+      if (category) {
+        category.label = action.payload.newLabel;
+      }
+    },
+    removeCategory: (state, action: PayloadAction<string>) => {
+      state.categories = state.categories.filter(
+        (cat) => cat.id !== action.payload
+      );
+    },
   },
 });
 
-export const { addCategory, addItemToCategory, removeItemFromCategory } =
-  categorySlice.actions;
+export const {
+  addCategory,
+  addItemToCategory,
+  removeItemFromCategory,
+  updateCategory,
+  removeCategory,
+} = categorySlice.actions;
+
 export default categorySlice.reducer;
