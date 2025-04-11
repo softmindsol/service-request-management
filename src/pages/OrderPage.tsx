@@ -19,7 +19,6 @@ export default function OrderPage() {
 
   const orders = useSelector((state: RootState) => state.orders.orders);
   const userName = 'John Smith'; // Replace with dynamic user if available
-  console.log("orders:", orders);
 
   const filteredOrders = orders.filter((order) => {
     const isMine = order.person === userName;
