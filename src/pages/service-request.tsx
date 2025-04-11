@@ -22,12 +22,7 @@ export default function UserPage() {
   const [cart, setCart] = useState<{ [key: string]: { name: string; quantity: number } }>({});
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.categories.categories);
-  const orders = useSelector((state: RootState) => state.orders.orders);
-
-  const activeOrders = orders.filter(
-    (o) => o.person === userName && o.status !== "Answered"
-  );
-
+  
   const submitRequest = () => {
     setShowConfirmModal(true);
   };
