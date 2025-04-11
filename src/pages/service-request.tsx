@@ -22,7 +22,7 @@ export default function UserPage() {
   const [cart, setCart] = useState<{ [key: string]: { name: string; quantity: number } }>({});
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.categories.categories);
-  
+
   const submitRequest = () => {
     setShowConfirmModal(true);
   };
@@ -108,7 +108,7 @@ export default function UserPage() {
                       {categories.find(r => r.id === selectedRequest)?.items.map(item => {
                         const quantity = itemQuantities[item.name] || 1;
                         return (
-                          <Card key={item.name} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <Card key={item.name} className="p-[13px] flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div className="text-lg font-medium w-[15%]">{item.name}</div>
                             {item.allowMultiple ? (
                               <div className="flex items-center gap-3">
@@ -156,7 +156,7 @@ export default function UserPage() {
               </Card>
             )}
 
-          
+
           </div>
         </div>
       </div>

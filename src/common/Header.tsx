@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSe
       <div className="flex items-center gap-2">
         <Link to='/'>
           <img src={theme === "dark" ? "/logo-white.png" : "/logo.png"} alt="Logo" className="h-[60px] w-[60px]" /></Link>
-        
+
         <h1 className="text-xl font-semibold">{serviceName}</h1>
         <nav>
           <ul className="flex items-center ml-6">
@@ -36,9 +36,16 @@ const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSe
         <Button className='cursor-pointer' variant="ghost" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
           {theme === "light" ? <FaMoon /> : <FaSun />}
         </Button>
-        <button onClick={() => setShowSettings(!showSettings)} className="cursor-pointer mr-2 hover:bg-gray-100 p-[8px] rounded-[8px] transition-all duration-100">
-          <FaUserCog size={20}/>
+        <button
+          onClick={() => setShowSettings(!showSettings)}
+          className="cursor-pointer mr-2 hover:bg-gray-100 text-white hover:text-gray-900 p-[8px] rounded-[8px] transition-all duration-100"
+        >
+          <FaUserCog
+            size={20}
+            className=" dark:text-gray-900" // <-- explicitly define light & dark color
+          />
         </button>
+
       </div>
     </header>
   );

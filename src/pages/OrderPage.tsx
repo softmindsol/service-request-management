@@ -58,7 +58,7 @@ export default function OrderPage() {
 
               <div className="space-y-3">
                 {filteredOrders.length === 0 ? (
-                  <p className="text-gray-500 dark:text-gray-400">No orders found.</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-center italic">No orders found.</p>
                 ) : (
                   filteredOrders.map((order) => (
                     <div
