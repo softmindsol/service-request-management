@@ -36,16 +36,9 @@ const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSe
         <Button className='cursor-pointer' variant="ghost" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
           {theme === "light" ? <FaMoon /> : <FaSun />}
         </Button>
-        <button
-          onClick={() => setShowSettings(!showSettings)}
-          className="cursor-pointer mr-2 hover:bg-gray-100 text-white hover:text-gray-900 p-[8px] rounded-[8px] transition-all duration-100"
-        >
-          <FaUserCog
-            size={20}
-            className=" dark:text-gray-900" // <-- explicitly define light & dark color
-          />
-        </button>
-
+        <Button variant="ghost" onClick={() => setShowSettings(!showSettings)} className="cursor-pointer mr-2 hover:bg-gray-100 p-[8px] rounded-[8px] transition-all duration-100 hover:text-gray-700">
+          <FaUserCog size={20} />
+        </Button>
       </div>
     </header>
   );
