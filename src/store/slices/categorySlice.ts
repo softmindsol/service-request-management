@@ -23,7 +23,7 @@ const initialState: CategoryState = {
       id: "drinks",
       label: "Drinks",
       items: [
-        { name: "Tea", allowMultiple: true },
+        { name: "Tea", allowMultiple: false },
         { name: "Coffee", allowMultiple: true },
       ],
     },
@@ -31,7 +31,7 @@ const initialState: CategoryState = {
       id: "food",
       label: "Food",
       items: [
-        { name: "Pizza", allowMultiple: true },
+        { name: "Pizza", allowMultiple: false },
         { name: "Burger", allowMultiple: true },
       ],
     },
