@@ -3,6 +3,7 @@ import AdminDashboard from "@/pages/admin-dashboard";
 import ServiceRequest from "@/pages/service-request";
 import AuthForm from "@/pages/AuthForm";
 import AnsweredOrdersPage from "@/pages/AnsweredOrdersPage";
+import OrderPage from "./pages/OrderPage";
 
 function App() {
   return (
@@ -10,6 +11,8 @@ function App() {
       <Route path="/" element={<ServiceRequest />} />
       <Route path="/auth-form" element={<AuthForm />} />
       <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/order-status" element={<OrderPage />} />
+
       <Route path="/answered-order" element={<AnsweredOrdersPage />} />
 
     </Routes>

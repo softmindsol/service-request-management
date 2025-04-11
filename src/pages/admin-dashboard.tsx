@@ -25,6 +25,7 @@ export default function AdminPage() {
   const [editedLabel, setEditedLabel] = useState("");
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [newItems, setNewItems] = useState<Record<string, string>>({});
+  const [itemOptions, setItemOptions] = useState<Record<string, boolean>>({});
 
   const categories = useSelector((state: RootState) => state.categories.categories);
   const orders = useSelector((state: RootState) => state.orders.orders);
@@ -180,11 +181,6 @@ export default function AdminPage() {
         <Card>
           <CardContent className="p-4 md:p-6 space-y-6">
             <h2 className="text-xl font-semibold mb-4">Manage Categories</h2>
-            <div className="pt-6 border-t flex items-center justify-between">
-              <h3 className="text-lg font-semibold mb-2">Add New Category</h3>
-              <Button onClick={() => setShowCategoryModal(true)}>Add Category</Button>
-            </div>
-
             <div className="grid gap-6 sm:grid-cols-2">
               {categories.map((cat) => (
                 <div key={cat.id} className="rounded-lg border p-4 bg-white dark:bg-zinc-800 shadow-sm space-y-3">
@@ -196,12 +192,6 @@ export default function AdminPage() {
                         onBlur={() => {
                           dispatch(updateCategory({ id: cat.id, newLabel: editedLabel }));
                           setEditingCategoryId(null);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            dispatch(updateCategory({ id: cat.id, newLabel: editedLabel }));
-                            setEditingCategoryId(null);
-                          }
                         }}
                         className="text-lg font-semibold border-b w-full dark:bg-zinc-800"
                         autoFocus
@@ -243,30 +233,33 @@ export default function AdminPage() {
                       e.preventDefault();
                       const itemName = newItems[cat.id]?.trim();
                       if (itemName) {
-                        dispatch(addItemToCategory({ categoryId: cat.id, itemName }));
+                        const allowMultiple = itemOptions[cat.id] ?? false;
+                        dispatch(addItemToCategory({ categoryId: cat.id, itemName, allowMultiple }));
                         setNewItems(prev => ({ ...prev, [cat.id]: "" }));
+                        setItemOptions(prev => ({ ...prev, [cat.id]: false }));
                       }
                     }}
-                    className="flex items-center gap-2 pt-2"
+                    className="flex flex-col gap-2 pt-2"
                   >
                     <input
                       name="itemName"
                       value={newItems[cat.id] || ""}
-                      onChange={(e) =>
-                        setNewItems(prev => ({ ...prev, [cat.id]: e.target.value }))
-                      }
+                      onChange={(e) => setNewItems(prev => ({ ...prev, [cat.id]: e.target.value }))}
                       placeholder="New item"
-                      className="flex-1 px-3 py-1.5 border rounded text-sm dark:bg-zinc-900"
+                      className="px-3 py-1.5 border rounded text-sm dark:bg-zinc-900"
                     />
-                    <Button
-                      size="sm"
-                      type="submit"
-                      disabled={!newItems[cat.id]?.trim()}
-                    >
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={itemOptions[cat.id] || false}
+                        onChange={(e) => setItemOptions(prev => ({ ...prev, [cat.id]: e.target.checked }))}
+                      />
+                      Allow Quantity Selection (+ / -)
+                    </label>
+                    <Button size="sm" type="submit" disabled={!newItems[cat.id]?.trim()}>
                       Add
                     </Button>
                   </form>
-
                 </div>
               ))}
             </div>

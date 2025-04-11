@@ -3,7 +3,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface CategoryItem {
   name: string;
+  allowMultiple: boolean; // 🆕 Add this line
 }
+
 
 interface Category {
   id: string;
@@ -20,15 +22,22 @@ const initialState: CategoryState = {
     {
       id: "drinks",
       label: "Drinks",
-      items: [{ name: "Tea" }, { name: "Coffee" }],
+      items: [
+        { name: "Tea", allowMultiple: true },
+        { name: "Coffee", allowMultiple: true },
+      ],
     },
     {
       id: "food",
       label: "Food",
-      items: [{ name: "Pizza" }, { name: "Burger" }],
+      items: [
+        { name: "Pizza", allowMultiple: true },
+        { name: "Burger", allowMultiple: true },
+      ],
     },
   ],
 };
+
 
 const categorySlice = createSlice({
   name: "categories",
@@ -42,15 +51,23 @@ const categorySlice = createSlice({
     },
     addItemToCategory: (
       state,
-      action: PayloadAction<{ categoryId: string; itemName: string }>
+      action: PayloadAction<{
+        categoryId: string;
+        itemName: string;
+        allowMultiple?: boolean;
+      }>
     ) => {
       const category = state.categories.find(
         (cat) => cat.id === action.payload.categoryId
       );
       if (category) {
-        category.items.push({ name: action.payload.itemName });
+        category.items.push({
+          name: action.payload.itemName,
+          allowMultiple: action.payload.allowMultiple ?? false, // default true
+        });
       }
     },
+
     removeItemFromCategory: (
       state,
       action: PayloadAction<{ categoryId: string; itemName: string }>

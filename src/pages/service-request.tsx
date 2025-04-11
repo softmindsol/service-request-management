@@ -1,4 +1,4 @@
-// ✅ Final Updated Code
+// ✅ Final Updated Code with allowMultiple logic + Active Orders view
 
 import { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,19 +12,23 @@ import { RootState } from '@/store';
 export default function UserPage() {
   const [selectedRequest, setSelectedRequest] = useState('');
   const [notes, setNotes] = useState('');
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [showSettings, setShowSettings] = useState(false);
   const [userName, setUserName] = useState('John Smith');
   const [submitted, setSubmitted] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [serviceName] = useState("IntraServe Desk");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({});
   const [cart, setCart] = useState<{ [key: string]: { name: string; quantity: number } }>({});
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.categories.categories);
+  const orders = useSelector((state: RootState) => state.orders.orders);
+
+  const activeOrders = orders.filter(
+    (o) => o.person === userName && o.status !== "Answered"
+  );
 
   const submitRequest = () => {
-    if (Object.keys(cart).length === 0) return;
     setShowConfirmModal(true);
   };
 
@@ -111,12 +115,19 @@ export default function UserPage() {
                         return (
                           <Card key={item.name} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div className="text-lg font-medium w-[15%]">{item.name}</div>
-                            <div className="flex items-center gap-3">
-                              <Button variant="outline" onClick={() => handleQuantityChange(item.name, Math.max(1, quantity - 1))}>–</Button>
-                              <span className="min-w-[24px] text-center">{quantity}</span>
-                              <Button variant="outline" onClick={() => handleQuantityChange(item.name, quantity + 1)}>+</Button>
-                            </div>
-                            <Button onClick={() => handleAddToCart(item.name, quantity)}>Add to Cart</Button>
+                            {item.allowMultiple ? (
+                              <div className="flex items-center gap-3">
+                                <Button variant="outline" onClick={() => handleQuantityChange(item.name, Math.max(1, quantity - 1))}>–</Button>
+                                <span className="min-w-[24px] text-center">{quantity}</span>
+                                <Button variant="outline" onClick={() => handleQuantityChange(item.name, quantity + 1)}>+</Button>
+                              </div>
+                            ) : (
+                              <div className="italic text-sm text-gray-500">One per request</div>
+                            )}
+                            <Button onClick={() => {
+                              submitRequest();
+                              handleAddToCart(item.name, item.allowMultiple ? quantity : 1);
+                            }}>Order</Button>
                           </Card>
                         );
                       })}
@@ -142,7 +153,6 @@ export default function UserPage() {
                           ))}
                         </div>
                       </div>
-                      <Button onClick={submitRequest}>Submit Request</Button>
                     </>
                   )}
 
@@ -150,6 +160,8 @@ export default function UserPage() {
                 </CardContent>
               </Card>
             )}
+
+          
           </div>
         </div>
       </div>
