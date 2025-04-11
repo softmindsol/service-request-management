@@ -19,11 +19,12 @@ export default function OrderPage() {
 
   const orders = useSelector((state: RootState) => state.orders.orders);
   const userName = 'John Smith'; // Replace with dynamic user if available
+  console.log("orders:", orders);
 
   const filteredOrders = orders.filter((order) => {
     const isMine = order.person === userName;
     if (filter === 'all') return isMine;
-    if (filter === 'active') return isMine && order.status !== 'Answered';
+    if (filter === 'active') return isMine && order.status === 'In Progress';
     if (filter === 'pending') return isMine && order.status === 'Pending';
     return false;
   });
