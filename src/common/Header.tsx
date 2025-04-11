@@ -3,7 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { FaSun, FaMoon, FaUserCog } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 interface HeaderProps {
   theme: 'light' | 'dark';
@@ -24,9 +24,9 @@ const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSe
         <nav>
           <ul className="flex items-center ml-6">
             <li>
-              <Link to="/order-status" className="hover:underline hover:text-gray-800  transition">
+              <NavLink to="/order-status" className="hover:underline hover:text-gray-800  transition">
                 Orders
-              </Link>
+              </NavLink>
             </li>
             {/* You can add more nav items here */}
           </ul>

@@ -118,3 +118,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.active{
+  color:cornflowerblue;
+  font-weight:600;
+  text-decoration:underline;
+  
+ 
+}
