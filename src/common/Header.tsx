@@ -11,9 +11,10 @@ interface HeaderProps {
   setTheme: (theme: 'light' | 'dark') => void;
   setShowSettings: (show: boolean) => void;
   showSettings: boolean;
+  location?:string;
 }
 
-const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSettings, showSettings }) => {
+const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSettings, showSettings, location }) => {
   return (
     <header className="sticky top-0 bg-inherit border-b z-10 dark:bg-gray-900 dark:text-white  flex justify-between  items-center">
       <div className="flex items-center gap-2">
@@ -21,16 +22,19 @@ const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSe
           <img src={theme === "dark" ? "/logo-white.png" : "/logo.png"} alt="Logo" className="h-[60px] w-[60px]" /></Link>
 
         <h1 className="text-xl font-semibold">{serviceName}</h1>
-        <nav>
-          <ul className="flex items-center ml-6">
-            <li>
-              <NavLink to="/order-status" className="hover:underline hover:text-gray-800  transition">
-                Orders
-              </NavLink>
-            </li>
-            {/* You can add more nav items here */}
-          </ul>
-        </nav>
+        {
+          location !== '/admin' && (<nav>
+            <ul className="flex items-center ml-6">
+              <li>
+                <NavLink to="/order-status" className="hover:underline hover:text-gray-800  transition">
+                  Orders
+                </NavLink>
+              </li>
+              {/* You can add more nav items here */}
+            </ul>
+          </nav>)
+        }
+      
       </div>
       <div className="flex items-center gap-4">
         <Button className='cursor-pointer' variant="ghost" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>

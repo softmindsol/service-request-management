@@ -15,6 +15,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Header from "@/common/Header";
 import { FaTrashCan } from "react-icons/fa6";
+import { useLocation } from "react-router-dom";
 
 export default function AdminPage() {
   const [theme, setTheme] = useState<'light' | 'dark'>("light");
@@ -26,10 +27,11 @@ export default function AdminPage() {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [newItems, setNewItems] = useState<Record<string, string>>({});
   const [itemOptions, setItemOptions] = useState<Record<string, boolean>>({});
-
+  const location = useLocation()
   const categories = useSelector((state: RootState) => state.categories.categories);
   const orders = useSelector((state: RootState) => state.orders.orders);
   const dispatch = useDispatch();
+  console.log("location:",location.pathname);
 
   const pendingOrders = orders.filter(order => order.status === "Pending");
   const inProgressOrders = orders.filter(order => order.status === "In Progress");
@@ -37,6 +39,7 @@ export default function AdminPage() {
   return (
     <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50 text-black"}`}>
       <Header
+        location={location.pathname}
         theme={theme}
         serviceName={serviceName}
         setTheme={setTheme}

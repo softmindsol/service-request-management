@@ -1,6 +1,6 @@
 // ✅ Final Updated Code with allowMultiple logic + Active Orders view
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,7 @@ import Header from "@/common/Header";
 import { addOrder } from "@/store/slices/orderSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { toast } from "sonner"
 
 export default function UserPage() {
   const [selectedRequest, setSelectedRequest] = useState('');
@@ -20,6 +21,8 @@ export default function UserPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({});
   const [cart, setCart] = useState<{ [key: string]: { name: string; quantity: number } }>({});
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.categories.categories);
 
@@ -38,6 +41,7 @@ export default function UserPage() {
 
     setSubmitted(true);
     setShowConfirmModal(false);
+    setShowSuccessPopup(true); // ✅ show success message
 
     setTimeout(() => {
       setSubmitted(false);
@@ -45,7 +49,9 @@ export default function UserPage() {
       setItemQuantities({});
       setCart({});
       setNotes('');
-    }, 200);
+    }, 1500);
+    setTimeout(() => setShowSuccessPopup(false), 3000);
+
   };
 
   const handleQuantityChange = (item: string, quantity: number) => {
@@ -58,6 +64,11 @@ export default function UserPage() {
     }
   };
 
+  
+useEffect(()=>{
+  toast.success(".")
+
+},[])
   return (
     <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
       <Header
@@ -66,6 +77,7 @@ export default function UserPage() {
         setTheme={setTheme}
         setShowSettings={setShowSettings}
         showSettings={showSettings}
+        location=''
       />
 
       <div className="max-w-4xl mx-auto p-4 space-y-6">
@@ -82,7 +94,7 @@ export default function UserPage() {
                   : ''}`}
                 onClick={() => setSelectedRequest(type.id)}
               >
-                {type.label}
+                {type.label} 
               </Button>
             ))}
           </div>
@@ -196,6 +208,21 @@ export default function UserPage() {
           </Card>
         </div>
       )}
+     {showSuccessPopup && (
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-zinc-900 w-[400px] h-[170px] text-black dark:text-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-4 animate-fade-in">
+      {/* Tick animation */}
+      <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+        <svg className="w-10 h-10 text-green-600 animate-ping-once" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <p className="text-lg font-semibold">Order Placed Successfully!</p>
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 }
