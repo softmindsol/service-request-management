@@ -1,6 +1,5 @@
-// ✅ Final Updated Code with allowMultiple logic + Active Orders view
 
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,7 +7,6 @@ import Header from "@/common/Header";
 import { addOrder } from "@/store/slices/orderSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { toast } from "sonner"
 
 export default function UserPage() {
   const [selectedRequest, setSelectedRequest] = useState('');
@@ -65,10 +63,7 @@ export default function UserPage() {
   };
 
   
-useEffect(()=>{
-  toast.success(".")
 
-},[])
   return (
     <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
       <Header
