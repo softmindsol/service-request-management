@@ -4,9 +4,10 @@ import { RootState } from "@/store";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Header from "@/common/Header";
+import useThemeMode from "@/hooks/useTheme";
 
 export default function AnsweredOrdersPage() {
-    const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const { theme, setTheme } = useThemeMode(); // now you have access to theme and toggle
     const [showSettings, setShowSettings] = useState(false);
     const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
     const [serviceName] = useState("Answered Requests");

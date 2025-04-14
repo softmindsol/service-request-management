@@ -16,9 +16,10 @@ import { Button } from "@/components/ui/button";
 import Header from "@/common/Header";
 import { FaTrashCan } from "react-icons/fa6";
 import { useLocation } from "react-router-dom";
+import useThemeMode from "@/hooks/useTheme";
 
 export default function AdminPage() {
-  const [theme, setTheme] = useState<'light' | 'dark'>("light");
+    const { theme, setTheme } = useThemeMode(); // now you have access to theme and toggle
   const [showSettings, setShowSettings] = useState(false);
   const [serviceName] = useState("IntraServe Admin Panel");
   const [viewMode, setViewMode] = useState<'list' | 'grid'>("grid");
@@ -184,6 +185,14 @@ export default function AdminPage() {
         <Card>
           <CardContent className="p-4 md:p-6 space-y-6">
             <h2 className="text-xl font-semibold mb-4">Manage Categories</h2>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Add New Category</h3>
+              <Button size="lg" type="submit" onClick={() => setShowCategoryModal(true)} className="mt-2 cursor-pointer">
+                Add
+              </Button>
+            </div>
+
+
             <div className="grid gap-6 sm:grid-cols-2">
               {categories.map((cat) => (
                 <div key={cat.id} className="rounded-lg border p-4 bg-white dark:bg-zinc-800 shadow-sm space-y-3">

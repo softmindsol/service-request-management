@@ -7,6 +7,7 @@ import Header from "@/common/Header";
 import { addOrder } from "@/store/slices/orderSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import useThemeMode from '@/hooks/useTheme';
 
 export default function UserPage() {
   const [selectedRequest, setSelectedRequest] = useState('');
@@ -14,7 +15,7 @@ export default function UserPage() {
   const [showSettings, setShowSettings] = useState(false);
   const [userName, setUserName] = useState('John Smith');
   const [submitted, setSubmitted] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const { theme, setTheme } = useThemeMode(); // now you have access to theme and toggle
   const [serviceName] = useState("IntraServe Desk");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({});
@@ -68,8 +69,8 @@ export default function UserPage() {
     <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
       <Header
         theme={theme}
-        serviceName={serviceName}
         setTheme={setTheme}
+        serviceName={serviceName}
         setShowSettings={setShowSettings}
         showSettings={showSettings}
         location=''

@@ -10,10 +10,11 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import Header from '@/common/Header';
+import useThemeMode from '@/hooks/useTheme';
 
 export default function OrderPage() {
   const [filter, setFilter] = useState<'Answered' | 'In Progress' | 'Pending'>('Pending');
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+    const { theme, setTheme } = useThemeMode(); // now you have access to theme and toggle
   const [showSettings, setShowSettings] = useState(false);
   const [serviceName] = useState('All Orders');
 
