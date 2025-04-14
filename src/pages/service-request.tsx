@@ -47,7 +47,7 @@ export default function UserPage() {
       setItemQuantities({});
       setCart({});
       setNotes('');
-    }, 1500);
+    }, 100);
     setTimeout(() => setShowSuccessPopup(false), 3000);
 
   };

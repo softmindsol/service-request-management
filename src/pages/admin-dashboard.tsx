@@ -31,7 +31,6 @@ export default function AdminPage() {
   const categories = useSelector((state: RootState) => state.categories.categories);
   const orders = useSelector((state: RootState) => state.orders.orders);
   const dispatch = useDispatch();
-  console.log("location:",location.pathname);
 
   const pendingOrders = orders.filter(order => order.status === "Pending");
   const inProgressOrders = orders.filter(order => order.status === "In Progress");
