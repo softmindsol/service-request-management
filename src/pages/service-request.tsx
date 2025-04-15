@@ -1,5 +1,5 @@
 
-import {  useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +15,7 @@ export default function UserPage() {
   const [showSettings, setShowSettings] = useState(false);
   const [userName, setUserName] = useState('John Smith');
   const [submitted, setSubmitted] = useState(false);
-    const { theme, setTheme } = useThemeMode(); // now you have access to theme and toggle
+  const { theme, setTheme } = useThemeMode(); // now you have access to theme and toggle
   const [serviceName] = useState("IntraServe Desk");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [itemQuantities, setItemQuantities] = useState<Record<string, number>>({});
@@ -63,7 +63,21 @@ export default function UserPage() {
     }
   };
 
-  
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        setShowSettings(false)
+      }
+    };
+    if (showSettings) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showSettings, setShowSettings]);
+  console.log("theme:", theme);
 
   return (
     <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
@@ -85,12 +99,12 @@ export default function UserPage() {
                 variant={selectedRequest === type.id ? "default" : "outline"}
                 className={`w-full border hover:cursor-pointer ${selectedRequest !== type.id
                   ? theme === 'dark'
-                    ? 'border-white text-black hover:bg-white hover:text-black'
+                    ? 'border-white text-white hover:bg-white hover:text-black'
                     : 'border-black text-black hover:bg-black hover:text-white'
                   : ''}`}
                 onClick={() => setSelectedRequest(type.id)}
               >
-                {type.label} 
+                {type.label}
               </Button>
             ))}
           </div>
@@ -171,19 +185,48 @@ export default function UserPage() {
 
       {showSettings && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="relative p-6 w-full max-w-md bg-white text-black dark:bg-gray-800 dark:text-white">
+          <Card
+            ref={modalRef}
+            className="relative p-6 w-full max-w-md bg-white text-black dark:bg-gray-800 dark:text-white"
+          >
             <button
-              onClick={() => setShowSettings(false)}
+              onClick={() => { setShowSettings(false); }}
               className="absolute top-4 right-4 text-black dark:text-white text-[24px] hover:scale-110 transition cursor-pointer"
             >
               ×
             </button>
             <h2 className="text-xl font-semibold mb-4 mt-2">User Settings</h2>
             <div className="space-y-4">
-              <input type="file" accept="image/*" className="w-full text-sm" />
-              <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="w-full p-2 border rounded" />
-              <input type="password" className="w-full p-2 border rounded" placeholder="Password" />
-              <Button onClick={() => setShowSettings(false)}>Save</Button>
+              <label
+                htmlFor="upload"
+                className="flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition text-sm text-center"
+              >
+                <div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Click or drag image to upload
+                  </p>
+                  <p className="text-xs text-gray-400">(Only image files accepted)</p>
+                </div>
+              </label>
+              <input
+                id="upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+              />
+              <input
+                type="text"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                className="w-full p-2 border rounded"
+                placeholder="Username"
+              />
+              <input
+                type="password"
+                className="w-full p-2 border rounded"
+                placeholder="Password"
+              />
+              <Button onClick={() => { }}>Save</Button>
             </div>
           </Card>
         </div>
@@ -204,19 +247,19 @@ export default function UserPage() {
           </Card>
         </div>
       )}
-     {showSuccessPopup && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
+      {showSuccessPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
           <div className="bg-white dark:bg-zinc-900 w-[400px] h-[170px] text-black dark:text-white p-6 rounded-lg shadow-lg flex flex-col items-center gap-4 animate-fade-in">
-      {/* Tick animation */}
-      <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-        <svg className="w-10 h-10 text-green-600 animate-ping-once" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-        </svg>
-      </div>
-      <p className="text-lg font-semibold">Order Placed Successfully!</p>
-    </div>
-  </div>
-)}
+            {/* Tick animation */}
+            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+              <svg className="w-10 h-10 text-green-600 animate-ping-once" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p className="text-lg font-semibold">Order Placed Successfully!</p>
+          </div>
+        </div>
+      )}
 
 
     </div>

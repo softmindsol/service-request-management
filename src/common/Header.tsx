@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSe
           location !== '/admin' && (<nav>
             <ul className="flex items-center ml-6">
               <li>
-                <NavLink to="/order-status" className="hover:underline hover:text-gray-800  transition">
+                <NavLink to="/order-status" className="hover:underline text-black hover:text-gray-800  dark:text-white transition">
                   Orders
                 </NavLink>
               </li>
@@ -40,9 +40,9 @@ const Header: React.FC<HeaderProps> = ({ theme, serviceName, setTheme, setShowSe
         <Button className='cursor-pointer' variant="ghost" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
           {theme === "light" ? <FaMoon /> : <FaSun />}
         </Button>
-        <Button variant="ghost" onClick={() => setShowSettings(!showSettings)} className="cursor-pointer mr-2 hover:bg-gray-100 p-[8px] rounded-[8px] transition-all duration-100 hover:text-gray-700">
+        <button onClick={() => setShowSettings(!showSettings)} className="cursor-pointer mr-2 hover:bg-gray-100 dark:hover:bg-[#1B1F27]  p-[8px] rounded-[8px] transition-all duration-100 hover:text-white-700">
           <FaUserCog size={20} />
-        </Button>
+        </button>
       </div>
     </header>
   );
