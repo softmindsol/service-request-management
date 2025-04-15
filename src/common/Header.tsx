@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import api from "@/api/api";
 import { fetchUserById } from "@/store/features/user/user";
 import { getImageUrl } from "@/utils";
+import { LogOut } from "lucide-react";
 
 interface HeaderProps {
   theme: 'light' | 'dark';
@@ -110,14 +111,24 @@ const Header: React.FC<HeaderProps> = ({
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-zinc-900">
+          <DropdownMenuContent align="end" className="w-56 bg-white dark:bg-zinc-900">
+            <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+              <p className="text-sm font-medium text-gray-900 dark:text-white">{user?.username}</p>
+              <p className="text-xs text-gray-500 truncate dark:text-gray-400">{user?.email}</p>
+            </div>
             <DropdownMenuItem onClick={() => setShowSettings(true)}>
               ⚙️ User Settings
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleLogout}>
-              🚪 Logout
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="flex items-center gap-2 text-red-600 hover:text-red-700"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
             </DropdownMenuItem>
+
           </DropdownMenuContent>
+
         </DropdownMenu>
       </div>
     </header>

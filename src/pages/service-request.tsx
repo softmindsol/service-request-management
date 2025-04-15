@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import useThemeMode from '@/hooks/useTheme';
 import { getUserIdFromLocalStorage } from '@/utils/getUserId';
+import UserSetting from '@/common/UserSetting';
 
 export default function UserPage() {
   const [selectedRequest, setSelectedRequest] = useState('');
@@ -25,6 +26,7 @@ export default function UserPage() {
 
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.categories.categories);
+  const user = useSelector((state: RootState) => state?.user?.currentUser?.data);
 
   const submitRequest = () => {
     setShowConfirmModal(true);
@@ -183,54 +185,9 @@ export default function UserPage() {
           </div>
         </div>
       </div>
-
+      
       {showSettings && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card
-            ref={modalRef}
-            className="relative p-6 w-full max-w-md bg-white text-black dark:bg-gray-800 dark:text-white"
-          >
-            <button
-              onClick={() => { setShowSettings(false); }}
-              className="absolute top-4 right-4 text-black dark:text-white text-[24px] hover:scale-110 transition cursor-pointer"
-            >
-              ×
-            </button>
-            <h2 className="text-xl font-semibold mb-4 mt-2">User Settings</h2>
-            <div className="space-y-4">
-              <label
-                htmlFor="upload"
-                className="flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md p-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition text-sm text-center"
-              >
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    Click or drag image to upload
-                  </p>
-                  <p className="text-xs text-gray-400">(Only image files accepted)</p>
-                </div>
-              </label>
-              <input
-                id="upload"
-                type="file"
-                accept="image/*"
-                className="hidden"
-              />
-              <input
-                type="text"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                className="w-full p-2 border rounded"
-                placeholder="Username"
-              />
-              <input
-                type="password"
-                className="w-full p-2 border rounded"
-                placeholder="Password"
-              />
-              <Button onClick={() => { }}>Save</Button>
-            </div>
-          </Card>
-        </div>
+        <UserSetting user={user} modalRef={modalRef} setShowSettings={setShowSettings} userName={user?.username} setUserName={setUserName} />
       )}
 
       {/* ✅ Single confirmation modal retained */}
