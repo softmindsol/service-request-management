@@ -1,6 +1,6 @@
 // store/slices/userSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { registerUser } from "../features/user/user";
+import { loginUser, registerUser } from "../features/user/user";
 
 interface UserState {
   loading: boolean;
@@ -36,7 +36,21 @@ const userSlice = createSlice({
       .addCase(registerUser.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+          builder.addCase(loginUser.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          });
+         builder.addCase(loginUser.fulfilled, (state, action) => {
+           state.loading = false;
+           state.currentUser = action.payload.user;
+         });
+
+          builder.addCase(loginUser.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string;
+          });
+
   },
 });
 

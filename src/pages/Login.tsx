@@ -5,19 +5,40 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import PublicHeader from "@/common/PublicHeader";
 import useThemeMode from "@/hooks/useTheme";
+import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { AppDispatch } from "@/store"; // 👈 if you're using a typed dispatch
+import { loginUser } from "@/store/features/user/user";
+import { Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+    const dispatch = useDispatch<AppDispatch>();
     const [formData, setFormData] = useState({ email: "", password: "" });
     const { theme, setTheme } = useThemeMode(); // now you have access to theme and toggle
-
+    const { loading } = useSelector((state: RootState) => state?.user);
+    const navigate=useNavigate()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log("Logging in:", formData);
+
+        try {
+             await dispatch(loginUser(formData)).unwrap()
+            .then((res) => {
+                console.log("Login response:", res); // Log the response for debugging
+              
+                    toast.success("Login successful!");
+                    // Optional: redirect or update UI
+                    navigate("/service-request"); // Redirect to service request page after successful login
+               
+            })
+        } catch (err) {
+            console.error("Login error:", err);
+            toast.error("Login failed.");
+        }
     };
 
     return (
@@ -37,7 +58,18 @@ export default function Login() {
                                 <Label>Password</Label>
                                 <Input type="password" name="password" value={formData.password} onChange={handleChange} required />
                             </div>
-                            <Button type="submit" className="w-full">Login</Button>
+                           
+                            <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
+                                {loading ? (
+                                    <span className="flex items-center justify-center gap-2">
+                                        <Loader2 className="animate-spin w-4 h-4" />
+                                       
+                                    <span className="text-sm">Please wait...</span>
+                                    </span>
+                                ) : (
+                                    'Login'
+                                )}
+                            </Button>
                         </form>
                     </CardContent>
                 </Card>

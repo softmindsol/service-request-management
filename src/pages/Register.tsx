@@ -10,13 +10,18 @@ import {
     SelectContent,
     SelectItem
 } from "@/components/ui/select";
+import { Loader2 } from "lucide-react"; // using lucide-react icons
+
 import PublicHeader from "@/common/PublicHeader";
 import useThemeMode from "@/hooks/useTheme";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store"; // if using custom typed dispatch
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store"; // if using custom typed dispatch
 import { registerUser } from "@/store/features/user/user";
+import { toast } from "sonner";
 
 export default function Register() {
+    const { loading } = useSelector((state: RootState) => state?.user);
+    console.log("loading:", loading);
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -26,7 +31,7 @@ export default function Register() {
     });
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const { theme, setTheme } = useThemeMode();
-    
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, files } = e.target;
         if (name === "image" && files?.[0]) {
@@ -57,10 +62,26 @@ export default function Register() {
         }
 
         dispatch(registerUser(payload)).unwrap()
+            .then(() => {
+                // Handle successful registration, e.g., redirect or show a message
+                setFormData({
+                    username: "",
+                    email: "",
+                    password: "",
+                    role: "user",
+                    image: null,
+                });
+               toast.success("Registration successful!");
+                setPreviewUrl(null); // Reset preview URL after successful registration
+                toast.success("Verification email sent. Please check your inbox.");
+            })
+            .catch(() => {
+            toast.error("Registration failed. Please try again.");
+                // Handle registration error, e.g., show an error message
+            });
     };
 
-    console.log("theme:", theme);
-    
+
 
     return (
         <div className={`${theme === "dark" ? "dark" : ""}`}>
@@ -119,7 +140,16 @@ export default function Register() {
                             </div>
 
 
-                            <Button type="submit" className="w-full">Create Account</Button>
+                            <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
+                                {loading ? (
+                                    <span className="flex items-center justify-center gap-2">
+                                        <Loader2 className="animate-spin w-4 h-4" />
+                                        Creating...
+                                    </span>
+                                ) : (
+                                    'Create Account'
+                                )}
+                            </Button>
                         </form>
                     </CardContent>
                 </Card>
