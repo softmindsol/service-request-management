@@ -1,21 +1,23 @@
 // store/index.ts
-import { configureStore } from "@reduxjs/toolkit";
-import { combineReducers } from "redux";
-import storage from "redux-persist/lib/storage"; // localStorage
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 
 import orderReducer from "./slices/orderSlice";
 import categoryReducer from "./slices/categorySlice";
-import userReducer from './slices/userSlice'
+import userReducer from "./slices/userSlice";
+
+// 🔒 Root persist config (exclude user)
 const persistConfig = {
   key: "root",
   storage,
+  blacklist: ["user"], // ❌ Don't persist user slice
 };
 
 const rootReducer = combineReducers({
   orders: orderReducer,
   categories: categoryReducer,
-  user:userReducer
+  user: userReducer, // 👈 used normally, not persisted
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

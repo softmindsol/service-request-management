@@ -5,7 +5,7 @@ import { loginUser, registerUser } from "../features/user/user";
 interface UserState {
   loading: boolean;
   error: string | null;
-  currentUser: any; // can be refined
+  currentUser: any;
 }
 
 const initialState: UserState = {
@@ -13,7 +13,6 @@ const initialState: UserState = {
   error: null,
   currentUser: null,
 };
-
 
 const userSlice = createSlice({
   name: "user",
@@ -25,6 +24,8 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+
+      // 🔹 REGISTER USER
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -37,20 +38,20 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-          builder.addCase(loginUser.pending, (state) => {
-            state.loading = true;
-            state.error = null;
-          });
-         builder.addCase(loginUser.fulfilled, (state, action) => {
-           state.loading = false;
-           state.currentUser = action.payload.user;
-         });
 
-          builder.addCase(loginUser.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload as string;
-          });
-
+      // 🔹 LOGIN USER
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.currentUser = action.payload.user; // ✅ Make sure payload has .user
+      })
+      .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
