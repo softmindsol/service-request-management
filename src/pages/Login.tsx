@@ -11,10 +11,12 @@ import { RootState } from "@/store";
 import { AppDispatch } from "@/store"; // 👈 if you're using a typed dispatch
 import { loginUser } from "@/store/features/user/user";
 import { Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
     const dispatch = useDispatch<AppDispatch>();
+    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({ email: "", password: "" });
     const { theme, setTheme } = useThemeMode(); // now you have access to theme and toggle
     const { loading } = useSelector((state: RootState) => state?.user);
@@ -27,12 +29,13 @@ export default function Login() {
 
         try {
              await dispatch(loginUser(formData)).unwrap()
-            .then((res) => {
-                console.log("Login response:", res); // Log the response for debugging
-              
+            .then((res) => {              
                     toast.success("Login successful!");
                     // Optional: redirect or update UI
+                if (res.success) {
                     navigate("/service-request"); // Redirect to service request page after successful login
+
+                }
                
             })
         } catch (err) {
@@ -54,10 +57,26 @@ export default function Login() {
                                 <Label>Email</Label>
                                 <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-2 relative">
                                 <Label>Password</Label>
-                                <Input type="password" name="password" value={formData.password} onChange={handleChange} required />
+                                <Input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    className="pr-10"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                    className="absolute right-3 top-[33px] text-gray-500 hover:text-gray-800 dark:hover:text-white"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
                             </div>
+
                            
                             <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
                                 {loading ? (
@@ -70,6 +89,13 @@ export default function Login() {
                                     'Login'
                                 )}
                             </Button>
+                            <p className="text-sm text-center mt-2 text-muted-foreground">
+                                Don't have an account?{" "}
+                                <Link to="/" className="text-blue-600 hover:underline dark:text-blue-400">
+                                    Register
+                                </Link>
+                            </p>
+
                         </form>
                     </CardContent>
                 </Card>

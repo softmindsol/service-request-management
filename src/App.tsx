@@ -12,22 +12,8 @@ function App() {
   return (
     <Routes>
       {/* Public Route */}
-      <Route
-        path="/login"
-        element={
-          <ProtectedRoute isPublicOnly={true}>
-            <Login />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute isPublicOnly={true}>
-            <Register />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/" element={<Register />} />
+      <Route path="/login" element={<Login />} />
 
       {/* Login Route */}
       <Route path="/service-request" element={<ProtectedRoute><ServiceRequest /></ProtectedRoute>} />

@@ -23,13 +23,31 @@ export const loginUser = createAsyncThunk(
   "user/login",
   async (data: LoginData, { rejectWithValue }) => {
     try {
+      // Step 1: Login
       const response = await api.post("/login", data, {
         withCredentials: true,
       });
 
-      return response.data; // returns user + token or whatever your API sends
+ 
+      return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || "Login failed");
+    }
+  }
+);
+export const fetchUserById = createAsyncThunk(
+  "user/fetchById",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/${id}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        return rejectWithValue("Unauthorized");
+      }
+      return rejectWithValue("Failed to fetch user.");
     }
   }
 );

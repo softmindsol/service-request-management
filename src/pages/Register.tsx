@@ -11,17 +11,20 @@ import {
     SelectItem
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react"; // using lucide-react icons
-
+import { Eye, EyeOff } from "lucide-react";
 import PublicHeader from "@/common/PublicHeader";
 import useThemeMode from "@/hooks/useTheme";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store"; // if using custom typed dispatch
 import { registerUser } from "@/store/features/user/user";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 export default function Register() {
     const { loading } = useSelector((state: RootState) => state?.user);
-    console.log("loading:", loading);
+    const [showPassword, setShowPassword] = useState(false); // 👈 toggle state
+   
+
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -100,9 +103,24 @@ export default function Register() {
                                 <Label>Email</Label>
                                 <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-2 relative">
                                 <Label>Password</Label>
-                                <Input type="password" name="password" value={formData.password} onChange={handleChange} required />
+                                <Input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
+                                    className="pr-10"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                    className="absolute right-3 top-[32px] text-gray-500 hover:text-gray-800 dark:hover:text-white"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
                             </div>
 
                             <div className="space-y-2">
@@ -150,6 +168,12 @@ export default function Register() {
                                     'Create Account'
                                 )}
                             </Button>
+                            <p className="text-sm text-center mt-2 text-muted-foreground">
+                                Already have an account?{" "}
+                                <Link to="/login" className="text-blue-600 hover:underline dark:text-blue-400">
+                                    Login
+                                </Link>
+                            </p>
                         </form>
                     </CardContent>
                 </Card>

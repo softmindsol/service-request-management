@@ -5,10 +5,10 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
 }
 
 const api: AxiosInstance = axios.create({
-    baseURL: "http://localhost:8000/api/v1",
+    baseURL: import.meta.env.VITE_BASE_URL,
     withCredentials: true,
 });
-
+console.log("API instance created with base URL:");
 // RESPONSE INTERCEPTOR
 api.interceptors.response.use(
     (response: AxiosResponse) => {

@@ -8,6 +8,7 @@ import { addOrder } from "@/store/slices/orderSlice";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import useThemeMode from '@/hooks/useTheme';
+import { getUserIdFromLocalStorage } from '@/utils/getUserId';
 
 export default function UserPage() {
   const [selectedRequest, setSelectedRequest] = useState('');
@@ -67,6 +68,7 @@ export default function UserPage() {
 
   // Close on outside click
   useEffect(() => {
+    getUserIdFromLocalStorage()
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
         setShowSettings(false)
@@ -77,7 +79,6 @@ export default function UserPage() {
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showSettings, setShowSettings]);
-  console.log("theme:", theme);
 
   return (
     <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
