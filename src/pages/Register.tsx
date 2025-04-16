@@ -32,7 +32,7 @@ export default function Register() {
         role: "user",
         image: null as File | null,
     });
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    // const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const { theme, setTheme } = useThemeMode();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +40,7 @@ export default function Register() {
         if (name === "image" && files?.[0]) {
             const file = files[0];
             setFormData(prev => ({ ...prev, image: file }));
-            setPreviewUrl(URL.createObjectURL(file));
+            // setPreviewUrl(URL.createObjectURL(file));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
@@ -75,7 +75,7 @@ export default function Register() {
                     image: null,
                 });
                toast.success("Registration successful!");
-                setPreviewUrl(null); // Reset preview URL after successful registration
+                // setPreviewUrl(null); // Reset preview URL after successful registration
                 toast.success("Verification email sent. Please check your inbox.");
             })
             .catch(() => {
@@ -92,7 +92,7 @@ export default function Register() {
 
             <div className="h-[calc(100vh-57px)] bg-white dark:bg-gray-900 flex items-center justify-center px-4 overflow-hidden">
                 <Card className="w-full max-w-md bg-white dark:bg-zinc-900 text-black dark:text-white shadow-md">
-                    <CardContent className="p-6 space-y-4">
+                    <CardContent className="px-6 space-y-4">
                         <h2 className="text-2xl font-bold text-center">Register</h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
@@ -136,7 +136,7 @@ export default function Register() {
                                 </Select>
                             </div>
 
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label>Profile Picture</Label>
                                 <Input
                                     type="file"
@@ -155,7 +155,7 @@ export default function Register() {
                                         />
                                     </div>
                                 )}
-                            </div>
+                            </div> */}
 
 
                             <Button type="submit" className="w-full cursor-pointer" disabled={loading}>

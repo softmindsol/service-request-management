@@ -10,10 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import api from "@/api/api";
 import { fetchUserById } from "@/store/features/user/user";
-import { getImageUrl } from "@/utils";
+// import { getImageUrl } from "@/utils";
 import { LogOut } from "lucide-react";
 
 interface HeaderProps {
@@ -102,12 +102,12 @@ const Header: React.FC<HeaderProps> = ({
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="p-0 cursor-pointer  rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800">
               <Avatar className="h-9 w-9">
-                <AvatarImage
+                {/* <AvatarImage
                   // src={'/logo.png'}
                   src={getImageUrl(user?.image)}
                   alt={user?.name || "User"}
-                />
-                <AvatarFallback>{getInitials(user?.username || "")}</AvatarFallback>
+                /> */}
+                <AvatarFallback>{getInitials(user?.username || "U")}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>

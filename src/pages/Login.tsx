@@ -50,7 +50,7 @@ export default function Login() {
 
             <div className="h-[calc(100vh-64px)] bg-white dark:bg-gray-900 flex items-center justify-center px-4 overflow-hidden">
                 <Card className="w-full max-w-md bg-white dark:bg-zinc-900 text-black dark:text-white">
-                    <CardContent className="p-6 space-y-4">
+                    <CardContent className="px-6 space-y-4">
                         <h2 className="text-2xl font-bold text-center">Login</h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
