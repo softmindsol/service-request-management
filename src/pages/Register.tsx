@@ -66,7 +66,6 @@ export default function Register() {
 
         dispatch(registerUser(payload)).unwrap()
             .then(() => {
-                // Handle successful registration, e.g., redirect or show a message
                 setFormData({
                     username: "",
                     email: "",
@@ -83,7 +82,7 @@ export default function Register() {
                 // Handle registration error, e.g., show an error message
             });
     };
-
+    
 
 
     return (
